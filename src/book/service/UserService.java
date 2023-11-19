@@ -14,27 +14,7 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.users = initializeUsers();
-    }
-    public static ArrayList<User> initializeUsers() {
-        User.resetNextId();
-        ArrayList<User> readers = new ArrayList<>();
-
-        // Посетители библиотеки
-        //ADMIN
-        User adminUser = new User("Maxim", "Sakovich", "maximsakovich@gmail.com",
-                "maxim", "Password1!", UserRole.ADMIN);
-        readers.add(adminUser);
-
-        //CLIENT
-        User clientUser = new User("John", "Doe", "john.doe@example.com",
-                "johndoe", "Password2!");
-        User clientUser2 = new User("Jane", "Doe", "jane.doe@example.com",
-                "janedoe", "Password3!");
-
-       readers.add(clientUser);
-       readers.add(clientUser2);
-        return readers;
+        this.users = UserRepository.initializeUsers();
     }
 
     public void saveReader(User user) {
@@ -44,15 +24,6 @@ public class UserService {
     public User findReaderByName(String firstName, String lastName) {
        return userRepository.getReaderByName(firstName, lastName);
    }
-
-    public boolean isReaderExistsByEmail(String email) {
-        for (User user : userRepository.getAllReaders()) {
-            if (user.getEmail().equals(email)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public ArrayList<User> findAllReaders() {
         return userRepository.getAllReaders();
@@ -125,18 +96,6 @@ public class UserService {
         }
     }
 
-    // 9. Пользователи библиотеки
-    public void displayAllReaders() {
-        ArrayList<User> allReaders = findAllReaders();
-        if (allReaders.isEmpty()) {
-            System.out.println("В библиотеке нет зарегистрированных пользователей.");
-        } else {
-            System.out.println("Список пользователей библиотеки:");
-            for (User reader : allReaders) {
-                System.out.println(reader);
-            }
-        }
-    }
     // 10. Авторизация пользователей
     public void authenticateUser() {
         System.out.println("Введите логин:");
@@ -169,61 +128,6 @@ public class UserService {
         return user != null && user.isAdmin();
     }
 
-    // 11 Регистрации пользователя
-    public void registerUser() {
-        boolean validInput = false;
-        String email = "";
-        String password = "";
-        System.out.println("Введите логин пользователя:");
-        String username = scanner.nextLine();
-        System.out.println("Введите имя: ");
-        String firstname = scanner.nextLine();
-        System.out.println("Введите фамилию: ");
-        String lastname = scanner.nextLine();
-
-        while (!validInput) {
-            System.out.println("Введите email: ");
-            email = scanner.nextLine();
-            if (!isEmailValid(email)) {
-                System.err.println("Неверный формат электронной почты. " +
-                        "Пожалуйста, введите корректный е-мейл.");
-            } else {
-                validInput = true;
-            }
-        }
-        validInput = false;
-        while (!validInput) {
-            System.out.println("Придумайте корректный пароль пользователя: ");
-            password = scanner.nextLine();
-            if (!isPasswordValid(password)) {
-                System.err.println("Неверный формат пароля. Попробуйте еще раз!!!");
-                System.err.println("Требования к паролю: ");
-                System.err.println("Длина >= 8, мин 1 цифра, " +
-                        "маленькая буква, большая буква и спец.символ !%$@&");
-            } else {
-                validInput = true;
-            }
-        }
-        User newUser = new User(firstname, lastname, email, username, password, UserRole.CLIENT);
-        userRepository.addReader(newUser);
-        System.out.println("Пользователь зарегистрирован: " + newUser);
-        System.out.println("Уникальный номер пользователя (ID): " + newUser.getId());
-    }
-
-    // 13. Права доступа у пользователей, в зависимости от роли
-    public void displayUser() {
-        System.out.println("Введите ваш логин:");
-        String username = scanner.nextLine();
-        User user = findReaderByUsername(username);
-
-        if (user != null) {
-            System.out.println("Имя: " + user.getFirstName());
-            System.out.println("Фамилия: " + user.getLastName());
-            displayUserPermissions(user);
-        } else {
-            System.out.println("Пользователь не найден.");
-        }
-    }
     public User findReaderById(long userId) {
         return userRepository.getReaderById(userId);
     }

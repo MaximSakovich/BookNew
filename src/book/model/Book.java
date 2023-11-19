@@ -75,7 +75,4 @@ public class Book {
     public void setTakenDate(Date takenDate) {
         this.takenDate = takenDate;
     }
-
-    public void setId(int i) {
-    }
 }

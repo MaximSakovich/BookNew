@@ -1,6 +1,8 @@
 package book.repository;
 
 import book.model.User;
+import book.model.UserRole;
+
 import java.util.ArrayList;
 
 public class UserRepository {
@@ -11,14 +13,30 @@ public class UserRepository {
         this.readers = users;
     }
 
+    public static ArrayList<User> initializeUsers() {
+        User.resetNextId();
+        ArrayList<User> readers = new ArrayList<>();
+
+        // Посетители библиотеки
+        //ADMIN
+        User adminUser = new User("Maxim", "Sakovich", "maximsakovich@gmail.com",
+                "maxim", "Password1!", UserRole.ADMIN);
+        readers.add(adminUser);
+
+        //CLIENT
+        User clientUser = new User("John", "Doe", "john.doe@example.com",
+                "johndoe", "Password2!");
+        User clientUser2 = new User("Jane", "Doe", "jane.doe@example.com",
+                "janedoe", "Password3!");
+
+        readers.add(clientUser);
+        readers.add(clientUser2);
+        return readers;
+    }
+
     // Метод добавления читателя
     public void addReader(User user) {
         readers.add(user);
-    }
-
-    // Метод удаления читателя
-    public void removeReader(long user) {
-        readers.remove(user);
     }
 
     public ArrayList<User> getAllReaders() {

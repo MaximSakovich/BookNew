@@ -1,5 +1,6 @@
 package book.model;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class User {
@@ -11,6 +12,7 @@ public class User {
     private final String username;
     private final String password;
     private UserRole role = UserRole.CLIENT;
+    private final List<Book> takenBooks;
 
     public User(String firstName, String lastName, String email, String username,
                 String password) {
@@ -20,6 +22,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.id = nextId.getAndIncrement();
+        this.takenBooks = new ArrayList<>();
     }
     public User(String firstName, String lastName, String email, String username, String password, UserRole role) {
         this(firstName, lastName, email, username, password);
@@ -37,16 +40,21 @@ public class User {
                 //", id=" + id +
                 '}';
     }
+
+    // Метод для добавления книги в список взятых книг
+    public void takeBook(Book book) {
+        takenBooks.add(book);
+    }
+    // Метод для возвращения книги и удаления ее из списка взятых книг
+    public void returnBook(Book book) {
+        takenBooks.remove(book);
+    }
     public String getFirstName() {
         return firstName;
     }
 
     public String getLastName() {
         return lastName;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getUsername() {

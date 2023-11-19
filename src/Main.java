@@ -7,9 +7,10 @@ import book.service.UserService;
 import book.view.Menu;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
-import static book.service.BookService.initializeBooks;
-import static book.service.UserService.initializeUsers;
+import static book.repository.BookRepository.initializeBooks;
+import static book.repository.UserRepository.initializeUsers;
 
 
 public class Main {
@@ -19,8 +20,8 @@ public class Main {
         BookRepository bookRepository = new BookRepository(books);
         UserRepository userRepository = new UserRepository(readers);
         UserService userService = new UserService(userRepository);
-        BookService bookService = new BookService(bookRepository);
-        bookService.setUserService(userService);
+        Scanner scanner = new Scanner(System.in);
+        BookService bookService = new BookService(bookRepository, scanner);
 
         Menu menu = new Menu(bookService, userService);
 
